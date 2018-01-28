@@ -2,6 +2,8 @@ import java.util.Scanner;
 
 public class Main
 {
+	private static Scanner scan;
+
 	static private void affiche_menu()
 	{
 		System.out.println("1 : Générer une blockchain");
@@ -12,7 +14,7 @@ public class Main
 
 	static public void main(String[] args)
 	{
-		Scanner scan = new Scanner(System.in);
+		scan = new Scanner(System.in);
 		int resultat = 0;
 		boolean quitter = false;
 		System.out.println("Bonjour.");
