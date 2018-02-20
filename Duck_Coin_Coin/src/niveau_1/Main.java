@@ -1,4 +1,6 @@
+package niveau_1;
 import java.util.Scanner;
+import blockchain.Generer;
 
 public class Main
 {
@@ -16,10 +18,11 @@ public class Main
 	{
 		scan = new Scanner(System.in);
 		int resultat = 0;
+		String[] tab = new String[3];
+		tab[0] = "test";
 		boolean quitter = false;
 		System.out.println("Bonjour.");
 		affiche_menu();
-
 		while (quitter == false)
 		{
 			resultat = scan.nextInt();
@@ -28,6 +31,7 @@ public class Main
 			{
 			case 1:
 				System.out.println("Vous avez choisi de générer la blockchain...");
+				blockchain.Generer.main(tab);
 				break;
 			case 2:
 				System.out.println("Vous avez choisi d'afficher la blockchain...");
