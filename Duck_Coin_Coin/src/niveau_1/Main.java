@@ -1,7 +1,6 @@
 package niveau_1;
 import java.util.Scanner;
-import blockchain.Generer;
-
+import niveau_1.*;
 public class Main
 {
 	private static Scanner scan;
@@ -31,7 +30,7 @@ public class Main
 			{
 			case 1:
 				System.out.println("Vous avez choisi de générer la blockchain...");
-				blockchain.Generer.main(tab);
+				
 				break;
 			case 2:
 				System.out.println("Vous avez choisi d'afficher la blockchain...");

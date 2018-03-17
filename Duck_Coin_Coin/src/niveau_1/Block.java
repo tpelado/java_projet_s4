@@ -1,7 +1,5 @@
 package niveau_1;
-
 import java.sql.Timestamp;
-
 public class Block
 {
 		private int index;
@@ -31,6 +29,29 @@ public class Block
 			this.liste_transaction = liste_transaction;
 			this.hash_merkel = hash_merkel;
 			this.nonce = nonce;
+		}
+		
+		public Block generer_genesis()
+		{
+			Transaction[] tab_trans = new Transaction[0];
+			Block genesis = new Block(0, "0",0, tab_trans,"hash merkel",0);
+			return genesis;
+		}
+		
+		public void afficherBlock(Block blk)
+		{
+			int i=0;
+			System.out.println("index = "+blk.index);
+			System.out.println("timestamp = "+blk.index);
+			System.out.println("hash_précédent = "+blk.index);
+			System.out.println("nombre de transactions = "+blk.index);
+			System.out.println("transactions = ");
+			for(i=0;i<blk.nbr_transaction;i++)
+			{
+				
+			}
+			System.out.println("index = "+blk.index);
+			
 		}
 		
 }
