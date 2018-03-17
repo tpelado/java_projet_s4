@@ -13,6 +13,7 @@ public class Transaction
 		this.transaction = "source-destination :"+ThreadLocalRandom.current().nextInt(0, max + 1);
 	}
 	
+	
 	public void afficherTransaction(Transaction trans)
 	{
 		System.out.println(trans.transaction);
