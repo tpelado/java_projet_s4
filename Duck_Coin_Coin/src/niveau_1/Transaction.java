@@ -12,10 +12,23 @@ public class Transaction
 		int max = 100;
 		this.transaction = "source-destination :"+ThreadLocalRandom.current().nextInt(0, max + 1);
 	}
-	
-	
-	public void afficherTransaction(Transaction trans)
+	public Transaction(String texte)
 	{
-		System.out.println(trans.transaction);
+		this.transaction = texte;
+	}
+	
+	public String getStringTransaction()
+	{
+		return this.transaction;
+	}
+	
+	public void afficherTransaction()
+	{
+		System.out.println(this.transaction);
+	}
+	
+	public String getTransaction()
+	{
+		return this.transaction;
 	}
 }
