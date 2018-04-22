@@ -8,8 +8,8 @@ public class Block
 		private Timestamp timestamp;
 		private String hash_precedent;
 		private int nbr_transaction;
-		private String hash_merkel;
-		private String hash_block;
+		private String merkleRoot;
+		private String blockHash;
 		private int nonce;
 		private Transaction liste_transaction[];
 		/**
@@ -17,11 +17,11 @@ public class Block
 		 * @param hash_precedent
 		 * @param nbr_transaction
 		 * @param liste_transaction
-		 * @param hash_merkel
+		 * @param merkleRoot
 		 * @param nonce
 		 */
 	/*	public Block(int index, String hash_precedent, int nbr_transaction, Transaction[] liste_transaction,
-				String hash_merkel, int nonce)
+				String merkleRoot, int nonce)
 		{
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			this.index = index;
@@ -29,12 +29,13 @@ public class Block
 			this.hash_precedent = hash_precedent;
 			this.nbr_transaction = nbr_transaction;
 			this.liste_transaction = liste_transaction;
-			this.hash_merkel = hash_merkel;
+			this.merkleRoot = merkleRoot;
 			this.nonce = nonce;
 		}
 		*/
 		public Block(int index)
 		{
+		//	System.out.println("genere genesis");
 			this.index=0;
 			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 			this.timestamp = timestamp;
@@ -46,7 +47,7 @@ public class Block
 			this.hash_precedent="0";
 			this.nonce = 0;
 			this.calculerMerkelBlock();
-			this.hash_block = ""/*TODO add hash */;
+			this.blockHash = "";
 		}
 		public Block()
 		{
@@ -61,8 +62,8 @@ public class Block
 			this.nbr_transaction = 5;
 			this.liste_transaction = tab_trans;
 			this.hash_precedent="0";
-			this.nonce = 0; /* TODO add nonce */ 
-			this.hash_block = "";/*TODO add hash */
+			this.nonce = 0; 
+			this.blockHash = "";
 			this.calculerMerkelBlock(); /* calcule le hash de merkel */  
 		}
 		
@@ -81,8 +82,8 @@ public class Block
 			{
 				System.out.println("transaction : "+this.liste_transaction[i].getStringTransaction());
 			}
-			System.out.println("hash block = "+this.hash_block);
-			System.out.println("hash merkel = "+this.hash_merkel);
+			System.out.println("hash block = "+this.blockHash);
+			System.out.println("merkleRoot = "+this.merkleRoot);
 			
 		}
 		/* tentative pour génerer le hash de merkel en itératif */ 
@@ -123,7 +124,7 @@ public class Block
 			}
 			nbr_trans/=2;
 		}
-			this.hash_merkel=tab[0];
+			this.merkleRoot=tab[0];
 	}
 
 		private boolean minage(String hash, int difficulte)
@@ -144,14 +145,45 @@ public class Block
 		public void calculerHashBlock(int difficulte)
 		{
 			String tempo;
-			do
+			if(difficulte<1)
 			{
-				tempo = niveau_1.HashUtil.applySha256(this.hash_precedent+this.getStringTimestamp()+this.hash_merkel+this.nonce);
-				this.nonce++;
-			}while(!minage(tempo,difficulte));
-			this.hash_block=tempo;
+				tempo = niveau_1.HashUtil.applySha256(this.hash_precedent+this.getStringTimestamp()+this.merkleRoot+this.nonce);
+				this.blockHash=tempo;
+			}
+			else
+			{
+				do
+				{
+					tempo = niveau_1.HashUtil.applySha256(this.hash_precedent+this.getStringTimestamp()+this.merkleRoot+this.nonce);
+				//	System.out.println("hash obtenu "+tempo+" avec nonce "+this.nonce);
+				//	System.out.println("prec : "+this.getHash_precedent()+"\nstamp "+this.getStringTimestamp()+"\nmerkel "+this.merkleRoot);
+					this.nonce++;
+					// TODO remove this before release
+					/*if(this.nonce%100000==0)
+					{
+						System.out.println("nonce= "+nonce);
+					}*/
+				}while(!minage(tempo,difficulte));
+				this.blockHash=tempo;
+			}
 		}
 		
+		public void copyBlockFrom(Block source)
+		{
+			this.index = source.index;
+			this.timestamp = source.timestamp;
+			this.nbr_transaction = source.nbr_transaction;
+			this.liste_transaction = source.liste_transaction;
+			this.hash_precedent=source.hash_precedent;
+			this.nonce = source.nonce;
+			this.blockHash = "";
+			this.calculerMerkelBlock(); 
+		}
+		
+		public void setIndex(int index)
+		{
+			this.index = index;
+		}
 		
 		/**
 		 * @return the timestamp as a string
@@ -186,35 +218,35 @@ public class Block
 		}
 
 		/**
-		 * @return the hash_merkel
+		 * @return the merkleRoot
 		 */
-		public String getHash_merkel()
+		public String getmerkleRoot()
 		{
-			return hash_merkel;
+			return merkleRoot;
 		}
 
 		/**
-		 * @param hash_merkel the hash_merkel to set
+		 * @param merkleRoot the merkleRoot to set
 		 */
-		public void setHash_merkel(String hash_merkel)
+		public void setmerkleRoot(String merkleRoot)
 		{
-			this.hash_merkel = hash_merkel;
+			this.merkleRoot = merkleRoot;
 		}
 
 		/**
-		 * @return the hash_block
+		 * @return the blockHash
 		 */
-		public String getHash_block()
+		public String getblockHash()
 		{
-			return hash_block;
+			return blockHash;
 		}
 
 		/**
-		 * @param hash_block the hash_block to set
+		 * @param blockHash the blockHash to set
 		 */
-		public void setHash_block(String hash_block)
+		public void setblockHash(String blockHash)
 		{
-			this.hash_block = hash_block;
+			this.blockHash = blockHash;
 		}
 
 		/**
@@ -231,5 +263,17 @@ public class Block
 		public void setNonce(int nonce)
 		{
 			this.nonce = nonce;
+		}
+		public Transaction[] getTransactionTab() 
+		{
+			return this.liste_transaction;
+		}
+		public int getIndex()
+		{
+			return this.index;
+		}
+		public int getNbTransaction()
+		{
+			return this.nbr_transaction;
 		}
 }
