@@ -1,4 +1,4 @@
-package niveau_1;
+package niveau1;
 
 import java.security.MessageDigest;
 
