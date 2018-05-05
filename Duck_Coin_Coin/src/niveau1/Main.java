@@ -97,6 +97,7 @@ public class Main
 					tempo = scan.next();
 					if(tempo.equals("yes")|tempo.equals("Yes"))
 					{
+						blockchain.viderBlockchain();
 						System.out.println("OK.\nRentrez le nom de votre fichier (doit être dans le dossier du projet)");
 						tempo = scan.next();
 						if(!tempo.contains(".")) { // rajoute l'extension si l'utilisateur l'oublie
@@ -110,9 +111,14 @@ public class Main
 						else
 							System.err.println("erreur import blockchain");
 					}
+					else
+					{
+						System.out.println("pas de soucis");
+					}
 					
 				}
 				else
+				{
 					System.out.println("rentrez le nom de votre fichier (doit être dans le dossier du projet)");
 					tempo = scan.next();
 					if(!tempo.contains(".")) { // rajoute l'extension si l'utilisateur l'oublie
@@ -123,6 +129,7 @@ public class Main
 						blockchain.afficherBlockchain();
 					else
 						System.err.println("erreur import blokchain");
+				}
 				affiche_menu();
 				break;
 			case 0:

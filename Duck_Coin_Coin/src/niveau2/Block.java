@@ -140,13 +140,13 @@ public class Block
 		String tempo;
 		if(difficulte < 1)
 		{
-			tempo = niveau2.HashUtil.applySha256(this.hash_precedent + this.getStringTimestamp() + this.merkleRoot + this.nonce);
+			tempo = niveau2.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
 			this.blockHash = tempo;
 		} else
 		{
 			do
 			{
-				tempo = niveau2.HashUtil.applySha256(this.hash_precedent + this.getStringTimestamp() + this.merkleRoot + this.nonce);
+				tempo = niveau2.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
 				// System.out.println("hash obtenu "+tempo+" avec nonce "+this.nonce);
 				// System.out.println("prec : "+this.getHash_precedent()+"\nstamp
 				// "+this.getStringTimestamp()+"\nmerkel "+this.merkleRoot);
