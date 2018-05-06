@@ -2,7 +2,6 @@ package niveau2;
 
 import java.sql.Timestamp;
 
-
 /**
  * 
  * @author Tanguy
@@ -36,7 +35,7 @@ public class Blockchain
 	}
 
 	/**
-	 * affiche la blockchain
+	 * @deprecated non utilisé ici affiche la blockchain
 	 */
 	public void afficherBlockchain()
 	{
@@ -64,18 +63,33 @@ public class Blockchain
 		return this.nbrBlocks == -1;
 	}
 
+	/**
+	 * sert pour générer la blockchain depuis l'interface Graphique sans passer genererBlockchain en static
+	 * 
+	 * @param diff
+	 *            la difficulté
+	 * @param nbr
+	 *            le nombre de blocks à generer
+	 * @return une blockchain correspondant au réglages ci dessus
+	 */
 	public static Blockchain genererDepuisDehors(int diff, int nbr)
 	{
 		Blockchain bc = new Blockchain();
 		bc.genererBlockchain(diff, nbr);
 		return bc;
 	}
-	
 
-	
+	/**
+	 * génère une blockchain
+	 * 
+	 * @param diffe
+	 *            la difficulté de la blockchain
+	 * @param nbr
+	 *            le nombre de blocks
+	 */
 	public void genererBlockchain(int diffe, int nbr) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
 	{
-		
+
 		this.difficulte = diffe;
 		this.nbrBlocks = nbr;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis()); // on s'en sert pour savoir combien de temps on met pour générer la blockchain
@@ -90,11 +104,18 @@ public class Blockchain
 		System.out.println(" secondes pour générer la blockchain");
 	}
 
-	
-	
-	static public boolean isBcFromJsonValid(Blockchain bc) {
+	/**
+	 * permet de tester la validité d'une blockchain importée depuis un fichier JSON dans l'interface graphique
+	 * 
+	 * @param bc
+	 * @return
+	 */
+
+	static public boolean isBcFromJsonValid(Blockchain bc)
+	{
 		return bc.isValid();
 	}
+
 	/**
 	 * fonction vérifiant la validité de la blockchain
 	 * 
@@ -104,10 +125,11 @@ public class Blockchain
 	{
 		int i = 1;
 		boolean retour = true;
+
 		// on vérifie d'abord si le bloc genesis est bien le genesis (nonce à 0, hash précédent à 0, et 1 seule transaction)
 		Block tempo = new Block(); // initialise un block vide , qui servira de tampon pendant les vérifications, histoire de ne pas modifier accidentellement des valeurs de la blockchain
 		tempo.copyBlockFrom(this.getGenesis()); // copie le block genesis
-		if(tempo.getNonce() == 0 && tempo.getHash_precedent() == "0" && (tempo.getTransactionTab())[0].getVerifGenesis().equals("GenesisGenesisGenesis"))
+		if(tempo.getNonce() == 0 && tempo.getHash_precedent().equals("0") && (tempo.getTransactionTab())[0].getVerifGenesis().equals("GenesisGenesisGenesis"))
 		{
 			retour = true;
 		} else
@@ -118,8 +140,8 @@ public class Blockchain
 		for (; i < this.nbrBlocks; i++)
 		/** pour tout les blocks on va vérifier si le hash est correct,la merkle root, et si ils sont chainés correctement **/
 		{
-			
-			if(this.getBlock(i).getHash_precedent() != this.getBlock(i - 1).getblockHash()) // hash précédent
+
+			if(!this.getBlock(i).getHash_precedent().equals(this.getBlock(i - 1).getblockHash())) // hash précédent
 			{
 				// si jamais le hash précédent du block actuel est différent du hash du block précédent
 				retour = false;
@@ -208,6 +230,7 @@ public class Blockchain
 	}
 
 	/**
+	 * @deprecated non utilisé ici 
 	 * affiche un block de la blockchain, ici aussi en plus joli
 	 * 
 	 * @param nbrBlock

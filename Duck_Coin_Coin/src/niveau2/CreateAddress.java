@@ -6,9 +6,10 @@ import java.math.BigInteger;
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
-
+@SuppressWarnings("deprecation")
 public class CreateAddress {
 	/*methode qui, normalement, renvoie un tableau d' adresse de taile n passé en paramètre*/ 
+	
 	public static Address[] genererNAdresse(int n)
 	{
 		int i=0;
@@ -22,9 +23,15 @@ public class CreateAddress {
 		}
 		return tabAddress;
 	}
-	
+	/** 
+	 * revoie un tableau de clé pour signer les messages et générer les adresses
+	 * @param n le nombre de clés à générer
+	 * @return un tableau de clés 
+	 */
+	@SuppressWarnings("unused")
 	public static ECKey[] genererNKey(int n)
 	{
+		
 		int i=0;
 		final NetworkParameters netParams;
         netParams = NetworkParameters.testNet();
@@ -35,6 +42,11 @@ public class CreateAddress {
 		}
 		return tabKey;
 	}
+	/**
+	 * converti un tableau de clé en un tableau d'adresses pour les transactions 
+	 * @param tabKey un tableau de clé 
+	 * @return un tableau d'adresses 
+	 */
 	public static Address[] keyToAdresse(ECKey[] tabKey)
 	{
 		int i=0;
@@ -48,7 +60,11 @@ public class CreateAddress {
 		}
 		return tabAddress;
 	}
-	
+	/**
+	 * @deprecated pas utilisé ici
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unused")
     public static void adressTest() throws Exception {
   
           //use test net by default
@@ -78,12 +94,13 @@ public class CreateAddress {
           
           BigInteger pKey = key.getPrivKey();
           //System.out.println("Priv key 1 (Hex): "+key.getPrivateKeyAsHex());
-          byte[] pubKey = key.getPubKey();
+		byte[] pubKey = key.getPubKey();
           System.out.println("Pub key 1 (HEX): "+key.getPublicKeyAsHex());
           String message = "Message Ã  signer";
           String msgSign = key.signMessage(message);
           System.out.println("Message signÃ© : "+msgSign);
-          ECKey keyFromSign = new ECKey().signedMessageToKey(message,msgSign);
+          @SuppressWarnings("static-access")
+		ECKey keyFromSign = new ECKey().signedMessageToKey(message,msgSign);
           System.out.println("ECKey sign : "+keyFromSign.getPublicKeyAsHex());
           System.out.println("ECKey  : "+key.getPublicKeyAsHex());
           if (keyFromSign.getPublicKeyAsHex().equals(key.getPublicKeyAsHex()))

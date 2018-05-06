@@ -1,15 +1,19 @@
 package niveau2;
 
+/**
+ * VOIR NIVEAU 1 POUR DES COMMENTAIRES A JOUR, J'EN AI PROBABLEMENT OUBLIE ICI 
+ */
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom; // Utilisé pour générer des nombres pseudos aléatoires 
+
 public class Block
 {
 
 	private int index;
 	private String timestamp;
 	private String hash_precedent;
-	private int nbr_transaction; 
+	private int nbr_transaction;
 	private String merkleRoot;
 	private String blockHash;
 	private int nonce;
@@ -38,7 +42,7 @@ public class Block
 			this.liste_transaction = tab_trans;
 		} else
 		{
-			this.nbr_transaction = ThreadLocalRandom.current().nextInt(1,10 + 1);
+			this.nbr_transaction = ThreadLocalRandom.current().nextInt(1, 10 + 1);
 			this.liste_transaction = niveau2.Transaction.genererListeTransaction(this.nbr_transaction);
 
 		}
@@ -61,6 +65,9 @@ public class Block
 		this.merkleRoot = null;
 	}
 
+	/**
+	 * @deprecated pas utilisé ici
+	 */
 	public void afficherBlock()
 	{
 		int i = 0;
@@ -72,7 +79,7 @@ public class Block
 		System.out.println("transactions = ");
 		for (i = 0; i < this.nbr_transaction; i++)
 		{
-			System.out.println("transaction : " );
+			System.out.println("transaction : ");
 			this.getTransactionTab()[i].afficherTransaction();
 		}
 		System.out.println("blockHash   = " + this.blockHash);
@@ -80,20 +87,20 @@ public class Block
 
 	}
 
-	/* tentative pour génerer le hash de merkel en itératif */
+	/**
+	 * génère le hash de merkel en itératif
+	 */
 	public void calculerMerkelBlock()
 	{
 		int i = 0;
 		String tempo1/* ,tempo2 */;
 		int nbr_trans = this.nbr_transaction;
 		int j = 0;
-		int n = this.nbr_transaction; /* TODO regarder à quoi ça ça sert */
 		String[] tab;
 		if((this.nbr_transaction) % 2 == 1)
 		{
 
 			tab = new String[this.nbr_transaction + 1];
-			n++;
 		} else
 		{
 			tab = new String[this.nbr_transaction];
@@ -150,14 +157,7 @@ public class Block
 			do
 			{
 				tempo = niveau2.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
-				// System.out.println("hash obtenu "+tempo+" avec nonce "+this.nonce);
-				// System.out.println("prec : "+this.getHash_precedent()+"\nstamp
-				// "+this.getStringTimestamp()+"\nmerkel "+this.merkleRoot);
 				this.nonce++;
-				// TODO remove this before release
-				/*
-				 * if(this.nonce%100000==0) { System.out.println("nonce= "+nonce); }
-				 */
 			} while (!minage(tempo, difficulte));
 			this.blockHash = tempo;
 		}
@@ -181,6 +181,12 @@ public class Block
 		this.calculerMerkelBlock();
 	}
 
+	/**
+	 * génère une liste de block pour la blockchain
+	 * @param difficulte la difficulté de minage
+	 * @param nbrBlocks le nombre de blocks a generer
+	 * @return une liste de blocks 
+	 */
 	static public Block[] genererListeBlock(int difficulte, int nbrBlocks)
 	{
 		int i;

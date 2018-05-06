@@ -3,10 +3,13 @@ package niveau1;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom; // Utilisé pour générer des nombres pseudos aléatoires 
-
+/**
+ * 
+ * @author Tanguy
+ *
+ */
 public class Block
 {
-
 	private int index;
 	private String timestamp;
 	private String hash_precedent;
@@ -15,7 +18,10 @@ public class Block
 	private String blockHash;
 	private int nonce;
 	private Transaction liste_transaction[];
-
+	/**
+	 * Le timestamp était originellement un objet Timestamp, mais vu qu'il pose problème 
+	 * avec les JSON du programme C, c'est un string formatté avec le format SDF ci dessous
+	 */
 	/**
 	 * constructeur de l'objet block si l'index est donné, alors on génère un block aléatoire d'index "index"
 	 * 
@@ -24,6 +30,7 @@ public class Block
 	 */
 	public Block(int index)
 	{
+		/* pour plus de détail sur le SimpleDateFormat, consulter la JavaDoc */
 		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a");
 		Timestamp test = new Timestamp(System.currentTimeMillis());
 		this.timestamp = sdf.format(test);
@@ -39,7 +46,7 @@ public class Block
 			this.liste_transaction = tab_trans;
 		} else
 		{
-			this.nbr_transaction = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+			this.nbr_transaction = ThreadLocalRandom.current().nextInt(1, 10 + 1); // on génère un nombre de transactions pseudos aléatoire entre 1 et 10
 			this.liste_transaction = niveau1.Transaction.genererListeTransaction(this.nbr_transaction);
 
 		}
@@ -49,6 +56,7 @@ public class Block
 	}
 
 	/**
+	 * 
 	 * constructeur alternatif de l'objet block si l'index n'est pas donné, alors on génère un block vide
 	 **/
 	public Block()
@@ -61,7 +69,9 @@ public class Block
 		this.blockHash = null;
 		this.merkleRoot = null;
 	}
-
+	/**
+	 * @deprecated dans la version GUI de ce projet
+	 */
 	public void afficherBlock()
 	{
 		int i = 0;
@@ -80,20 +90,21 @@ public class Block
 
 	}
 
-	/* tentative pour génerer le hash de merkel en itératif */
+	/**
+	 * calcule le hash de merkle en itératif
+	 * 
+	 **/
 	public void calculerMerkelBlock()
 	{
 		int i = 0;
-		String tempo1/* ,tempo2 */;
+		String tempo1;
 		int nbr_trans = this.nbr_transaction;
 		int j = 0;
-		int n = this.nbr_transaction; /* TODO regarder à quoi ça ça sert */
 		String[] tab;
 		if((this.nbr_transaction) % 2 == 1)
 		{
 
 			tab = new String[this.nbr_transaction + 1];
-			n++;
 		} else
 		{
 			tab = new String[this.nbr_transaction];
@@ -130,19 +141,22 @@ public class Block
 		int i = 0;
 		for (; i < difficulte; i++)
 		{
-			if(hash.charAt(i) != '0')
+			if(hash.charAt(i) != '0') // tant que le nombre de 0 devant le hash ne correspond pas à la difficulté 
 			{
 				satisfait = false;
 			}
 		}
 		return satisfait;
 	}
-
+	/**
+	 * calcule le hash d'un block avec la difficulté donné en paramètre
+	 * @param difficulte vient de la blockchain
+	 */
 	public void calculerHashBlock(int difficulte)
 	{
 		String tempo;
 		
-		if(difficulte < 1)
+		if(difficulte < 1) // si pas de difficulté, on hash une seule fois et on touche pas à la none
 		{
 			tempo = niveau1.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
 			this.blockHash = tempo;
@@ -151,21 +165,15 @@ public class Block
 			do
 			{
 				tempo = niveau1.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
-				// System.out.println("hash obtenu "+tempo+" avec nonce "+this.nonce);
-				// System.out.println("prec : "+this.getHash_precedent()+"\nstamp
-				// "+this.getStringTimestamp()+"\nmerkel "+this.merkleRoot);
 				this.nonce++;
-				// TODO remove this before release
-				/*
-				 * if(this.nonce%100000==0) { System.out.println("nonce= "+nonce); }
-				 */
 			} while (!minage(tempo, difficulte));
 			this.blockHash = tempo;
 		}
 	}
 
 	/***
-	 * copie le block source dans le block sur lequel la méthode est invoqué méthode utilisée pour créer une copie d'un block sans modifier l'original
+	 * copie le block source dans le block sur lequel la méthode est invoqué.
+	 * méthode utilisée pour créer une copie d'un block sans modifier l'original
 	 * 
 	 * @param source
 	 *            : un objet de type Block que l'on veut copier

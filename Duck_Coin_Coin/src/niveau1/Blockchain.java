@@ -34,6 +34,7 @@ public class Blockchain
 	}
 
 	/**
+	 * @deprecated non utilisé dans la version GUI 
 	 * affiche la blockchain
 	 */
 	public void afficherBlockchain()
@@ -62,31 +63,43 @@ public class Blockchain
 		return this.nbrBlocks < 1;
 	}
 
+	/**
+	 * sert pour générer la blockchain depuis l'interface Graphique sans passer genererBlockchain en static
+	 * @param diff la difficulté 
+	 * @param nbr le nombre de blocks à generer
+	 * @return une blockchain correspondant au réglages ci dessus
+	 */
 	public static Blockchain genererDepuisDehors(int diff, int nbr)
 	{
 		Blockchain bc = new Blockchain();
 		bc.genererBlockchain(diff, nbr);
 		return bc;
 	}
-
+	/**
+	 * génère une blockchain 
+	 * @param diffe la difficulté de la blockchain
+	 * @param nbr le nombre de blocks
+	 */
 	public void genererBlockchain(int diffe, int nbr) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
 	{
 
 		this.difficulte = diffe;
 		this.nbrBlocks = nbr;
 		this.liste_block = niveau1.Block.genererListeBlock(this.difficulte, this.nbrBlocks); // génère une liste de block aléatoire avec un block genesis au début
-		if(!this.isValid()) // détermine la validité de la blockchain
+		if(!this.isValid()) // détermine la validité de la blockchain, ne "devrait" jamais se déclencher
 		{
 			System.err.println("erreur de génération blockchain...");
 		}
 	}
 
+	/**
+	 * permet de tester la validité d'une blockchain importée depuis un fichier JSON dans l'interface graphique
+	 * @param bc
+	 * @return
+	 */
 	static public boolean isBcFromJsonValid(Blockchain bc)
 	{
-		boolean test = true;
-		test = bc.isValid();
-		System.err.println("test=" + test);
-		return test;
+		return bc.isValid();
 	}
 
 	/**
@@ -96,7 +109,6 @@ public class Blockchain
 	 */
 	public boolean isValid()
 	{
-		this.afficherBlockchain();
 		int i = 1;
 		boolean retour = true;
 		// on vérifie d'abord si le bloc genesis est bien le genesis (nonce à 0, hash précédent à 0, et 1 seule transaction)
@@ -206,7 +218,7 @@ public class Blockchain
 
 	/**
 	 * affiche un block de la blockchain, ici aussi en plus joli
-	 * 
+	 * @deprecated pas utilisé dans le GUI 
 	 * @param nbrBlock
 	 *            : index du block à afficher
 	 */

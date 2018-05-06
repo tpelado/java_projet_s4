@@ -34,13 +34,12 @@ public class BCJsonUtils {
         return null; // retourne null en cas d'erreur
     }
     
-    public static niveau1.Blockchain BCJsonReaderFromString(String jsonString) {
-        Gson gson = new Gson(); // objet gson générique pour lire et écrire des fichiers JSON
-            niveau1.Blockchain bc = gson.fromJson(jsonString, niveau1.Blockchain.class);
-            return bc; // et on retourne la blockchain
-    }
-    
-    public static String BCJsonWriterToString(niveau1.Blockchain blockchain)
+    /**
+     *  prend un objet de type blockchain et retourne un String au format JSON de cet objet
+     * @param blockchain
+     * @return un string contenant un JSON
+     */
+    public static String BCJsonWriterToString(Blockchain blockchain)
 	{
 		// JSON Parser
 		// 1. Convert object to JSON string
@@ -49,7 +48,11 @@ public class BCJsonUtils {
 		return json;
 	}
     
-    
+    /**prend un string contenant une blockchain au format JSON et l'ecrit dans un fichier 
+     * 
+     * @param jsonBlockchain le string contenant la blockchain
+     * @param filename le nom du fichier
+     */
     public static void BCJsonWriterFromString(String jsonBlockchain, String filename){
         // JSON Parser
         //1. Convert object to JSON string
@@ -75,13 +78,20 @@ public class BCJsonUtils {
 
     }
 
+	/***
+	 * @deprecated pas utilisé dans la version graphique de ce projet ecrit l'objet blockchain dans un fichier
+	 * @param blockchain
+	 *            la blockchain à ecrire
+	 * @param filename
+	 *            le nom du fichier à créer
+	 */
     public static void BCJsonWriter(niveau1.Blockchain blockchain, String filename){
         // JSON Parser
         //1. Convert object to JSON string
     	File file; // objet fichier
     	Gson gson = new GsonBuilder().setPrettyPrinting().setDateFormat("EEE dd, yyyy HH:mm:ss a").create(); // créé un "builder" json qui rajoute les indents correctement (pretty print)
         String json = gson.toJson(blockchain); // converti la blockchain en JSON sous format String
-        file = new File("./"+filename); // on créé le fichier dans le répertoire courant
+        file = new File(filename); // on créé le fichier dans le répertoire courant
 		FileOutputStream fop = null; // on initialise l'outil pour ecrire dans le fichier
 		try
 		{

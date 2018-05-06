@@ -13,7 +13,9 @@ import com.google.gson.GsonBuilder;
 
 /***
  * au départ donné sur moodle, modifiée pour que : - ça fonctionne - le fichier json sorti ne soit pas une bouillie immonde impossible à lire
+ * 
  */
+
 public class BCJsonUtils
 {
 	/**
@@ -40,6 +42,12 @@ public class BCJsonUtils
 		return null; // retourne null en cas d'erreur
 	}
 
+	/**
+	 * prend un objet de type blockchain et retourne un String au format JSON de cet objet
+	 * 
+	 * @param blockchain
+	 * @return un string contenant un JSON
+	 */
 	public static String BCJsonWriterToString(Blockchain BlockC)
 	{
 		// JSON Parser
@@ -48,33 +56,48 @@ public class BCJsonUtils
 		String json = gson.toJson(BlockC); // converti la blockchain en JSON sous format String
 		return json;
 	}
-	
-	 public static void BCJsonWriterFromString(String jsonBlockchain, String filename){
-	        // JSON Parser
-	        //1. Convert object to JSON string
-	        File file = new File(filename); // on créé le fichier dans le répertoire courant
-			FileOutputStream fop = null; // on initialise l'outil pour ecrire dans le fichier
-			try
-			{
-				fop = new FileOutputStream(file);
-			} catch (FileNotFoundException e)
-			{
-				System.err.println("le fichier "+filename+" n'existe pas. vérifiez le nom et réessayez");
-			} // on ouvre "le descriptor de fichier", en tout cas c'est comme ça que je le comprend 
-			OutputStreamWriter out = new OutputStreamWriter(fop);
-			try 
-			{ // on ecrit le string généré dans le fichier et on le ferme
-				out.write(jsonBlockchain);
-				out.flush();
-				out.close();
-			} catch (IOException e)
-			{
-				e.printStackTrace();
-			}
 
-	    }
-	
-	
+	/**
+	 * prend un string contenant une blockchain au format JSON et l'ecrit dans un fichier
+	 * 
+	 * @param jsonBlockchain
+	 *            le string contenant la blockchain
+	 * @param filename
+	 *            le nom du fichier
+	 */
+	public static void BCJsonWriterFromString(String jsonBlockchain, String filename)
+	{
+		// JSON Parser
+		// 1. Convert object to JSON string
+		File file = new File(filename); // on créé le fichier dans le répertoire courant
+		FileOutputStream fop = null; // on initialise l'outil pour ecrire dans le fichier
+		try
+		{
+			fop = new FileOutputStream(file);
+		} catch (FileNotFoundException e)
+		{
+			System.err.println("le fichier " + filename + " n'existe pas. vérifiez le nom et réessayez");
+		} // on ouvre "le descriptor de fichier", en tout cas c'est comme ça que je le comprend
+		OutputStreamWriter out = new OutputStreamWriter(fop);
+		try
+		{ // on ecrit le string généré dans le fichier et on le ferme
+			out.write(jsonBlockchain);
+			out.flush();
+			out.close();
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+
+	/***
+	 * @deprecated pas utilisé dans la version graphique de ce projet ecrit l'objet blockchain dans un fichier
+	 * @param blockchain
+	 *            la blockchain à ecrire
+	 * @param filename
+	 *            le nom du fichier à créer
+	 */
 	public static void BCJsonWriter(Blockchain BlockC, String filename)
 	{
 		// JSON Parser
