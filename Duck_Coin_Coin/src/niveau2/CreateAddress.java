@@ -2,9 +2,10 @@ package niveau2;
 
 
 import java.math.BigInteger;
+
+import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.Address;
 
 public class CreateAddress {
 	/*methode qui, normalement, renvoie un tableau d' adresse de taile n passé en paramètre*/ 

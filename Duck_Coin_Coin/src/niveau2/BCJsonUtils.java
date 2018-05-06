@@ -40,6 +40,41 @@ public class BCJsonUtils
 		return null; // retourne null en cas d'erreur
 	}
 
+	public static String BCJsonWriterToString(Blockchain BlockC)
+	{
+		// JSON Parser
+		// 1. Convert object to JSON string
+		Gson gson = new GsonBuilder().setPrettyPrinting().setDateFormat("EEE dd, yyyy HH:mm:ss a").create(); // créé un "builder" json qui rajoute les indents correctement (pretty print)
+		String json = gson.toJson(BlockC); // converti la blockchain en JSON sous format String
+		return json;
+	}
+	
+	 public static void BCJsonWriterFromString(String jsonBlockchain, String filename){
+	        // JSON Parser
+	        //1. Convert object to JSON string
+	        File file = new File(filename); // on créé le fichier dans le répertoire courant
+			FileOutputStream fop = null; // on initialise l'outil pour ecrire dans le fichier
+			try
+			{
+				fop = new FileOutputStream(file);
+			} catch (FileNotFoundException e)
+			{
+				System.err.println("le fichier "+filename+" n'existe pas. vérifiez le nom et réessayez");
+			} // on ouvre "le descriptor de fichier", en tout cas c'est comme ça que je le comprend 
+			OutputStreamWriter out = new OutputStreamWriter(fop);
+			try 
+			{ // on ecrit le string généré dans le fichier et on le ferme
+				out.write(jsonBlockchain);
+				out.flush();
+				out.close();
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+
+	    }
+	
+	
 	public static void BCJsonWriter(Blockchain BlockC, String filename)
 	{
 		// JSON Parser

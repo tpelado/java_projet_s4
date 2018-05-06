@@ -1,8 +1,7 @@
 package niveau2;
 
 import java.sql.Timestamp;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+
 
 /**
  * 
@@ -65,55 +64,20 @@ public class Blockchain
 		return this.nbrBlocks == -1;
 	}
 
-	public void genererBlockchain() // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
+	public static Blockchain genererDepuisDehors(int diff, int nbr)
 	{
-		@SuppressWarnings("resource") // je sais que cette erreur existe, et je ne peux pas trop la corriger. donc je
-										// supprime l'avertissement dans eclipse
-		Scanner scan = new Scanner(System.in); // fermer le scanner correspond à fermer system.in, et j'ai pas trop
-												// envie
-		/*
-		 * faudrait passer soit: - le scanner en paramètre - les attributs de la blockchain...
-		 */
-		int diff = -1;
-		int nbrBlocks = -1;
-		System.out.println("Rentrez la difficulté de minage de votre blockchain (nombre entier)");
-		while (diff < 0) // récupère la difficulté voulue par l'utilisateur
-		{
-			try
-			{
-				diff = scan.nextInt();
-				if(diff<0)
-				{
-					System.out.println("UN ENTIER POSITIF OU NUL");
-					scan.nextLine();
-				}
-			} catch (InputMismatchException err) // si jamais l'utilisateur rentre des lettres...
-			{
-				System.out.println("UN ENTIER");
-				scan.nextLine();
-			}
-			
-		}
+		Blockchain bc = new Blockchain();
+		bc.genererBlockchain(diff, nbr);
+		return bc;
+	}
+	
 
-		while (nbrBlocks < 1) // récupère le nombre de block voulu par l'utilisateur
-		{
-			System.out.println("Rentrez le nombre de blocks de votre blockchain (nombre entier supérieur à 0)");
-			try
-			{
-				nbrBlocks = scan.nextInt();
-			} catch (InputMismatchException err)
-			{
-				System.out.println("UN ENTIER");
-				scan.nextLine();
-			}
-			if(nbrBlocks<1)
-			{
-				System.out.println("UN ENTIER POSITIF");
-				scan.nextLine();
-			}
-		}
-		this.difficulte = diff;
-		this.nbrBlocks = nbrBlocks;
+	
+	public void genererBlockchain(int diffe, int nbr) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
+	{
+		
+		this.difficulte = diffe;
+		this.nbrBlocks = nbr;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis()); // on s'en sert pour savoir combien de temps on met pour générer la blockchain
 		this.liste_block = niveau2.Block.genererListeBlock(this.difficulte, this.nbrBlocks); // génère une liste de block aléatoire avec un block genesis au début
 		Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
@@ -126,6 +90,11 @@ public class Blockchain
 		System.out.println(" secondes pour générer la blockchain");
 	}
 
+	
+	
+	static public boolean isBcFromJsonValid(Blockchain bc) {
+		return bc.isValid();
+	}
 	/**
 	 * fonction vérifiant la validité de la blockchain
 	 * 
@@ -149,6 +118,7 @@ public class Blockchain
 		for (; i < this.nbrBlocks; i++)
 		/** pour tout les blocks on va vérifier si le hash est correct,la merkle root, et si ils sont chainés correctement **/
 		{
+			
 			if(this.getBlock(i).getHash_precedent() != this.getBlock(i - 1).getblockHash()) // hash précédent
 			{
 				// si jamais le hash précédent du block actuel est différent du hash du block précédent

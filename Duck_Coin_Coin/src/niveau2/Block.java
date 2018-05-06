@@ -1,12 +1,13 @@
 package niveau2;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom; // Utilisé pour générer des nombres pseudos aléatoires 
 public class Block
 {
 
 	private int index;
-	private Timestamp timestamp;
+	private String timestamp;
 	private String hash_precedent;
 	private int nbr_transaction; 
 	private String merkleRoot;
@@ -22,7 +23,9 @@ public class Block
 	 */
 	public Block(int index)
 	{
-		this.timestamp = new Timestamp(System.currentTimeMillis());
+		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a");
+		Timestamp test = new Timestamp(System.currentTimeMillis());
+		this.timestamp = sdf.format(test);
 		this.nonce = 0;
 		this.index = index;
 		if(index == 0) // si c'est le block genesis
@@ -217,7 +220,7 @@ public class Block
 	 * @param timestamp
 	 *            the timestamp to set
 	 */
-	public void setTimestamp(Timestamp timestamp)
+	public void setTimestamp(String timestamp)
 	{
 		this.timestamp = timestamp;
 	}

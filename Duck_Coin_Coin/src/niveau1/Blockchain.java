@@ -1,14 +1,11 @@
 package niveau1;
 
-import java.sql.Timestamp;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 /**
  * 
  * @author Tanguy
  *
  */
+
 public class Blockchain
 {
 	private int difficulte; // stocke l'attribut de difficulté (utilisé pour le minage plus tard)
@@ -17,7 +14,7 @@ public class Blockchain
 
 	/**
 	 * initialisation de la blockchain
-	 * 
+	 * construit un element blockchain vide
 	 */
 	public Blockchain()
 	{
@@ -65,54 +62,31 @@ public class Blockchain
 		return this.nbrBlocks < 1;
 	}
 
-	public void genererBlockchain() // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
+	public static Blockchain genererDepuisDehors(int diff, int nbr)
 	{
-		@SuppressWarnings("resource") // je sais que cette erreur existe, et je ne peux pas trop la corriger. donc je
-										// supprime l'avertissement dans eclipse
-		Scanner scan = new Scanner(System.in); // fermer le scanner correspond à fermer system.in, et j'ai pas trop
-												// envie
-		/*
-		 * faudrait passer soit: - le scanner en paramètre - les attributs de la blockchain...
-		 */
-		int diff = -1;
-		int nbrBlocks = -1;
-		System.out.println("Rentrez la difficulté de minage de votre blockchain (nombre entier)");
-		while (diff < 0) // récupère la difficulté voulue par l'utilisateur
-		{
-			try
-			{
-				diff = scan.nextInt();
-			} catch (InputMismatchException err) // si jamais l'utilisateur rentre des lettres...
-			{
-				System.out.println("UN ENTIER");
-				scan.nextLine();
-			}
-		}
+		Blockchain bc = new Blockchain();
+		bc.genererBlockchain(diff, nbr);
+		return bc;
+	}
 
-		while (nbrBlocks < 1) // récupère le nombre de block voulu par l'utilisateur
-		{
-			System.out.println("Rentrez le nombre de blocks de votre blockchain (nombre entier supérieur à 0)");
-			try
-			{
-				nbrBlocks = scan.nextInt();
-			} catch (InputMismatchException err)
-			{
-				System.out.println("UN ENTIER");
-				scan.nextLine();
-			}
-		}
-		this.difficulte = diff;
-		this.nbrBlocks = nbrBlocks;
-		Timestamp timestamp = new Timestamp(System.currentTimeMillis()); // on s'en sert pour savoir combien de temps on met pour générer la blockchain
+	public void genererBlockchain(int diffe, int nbr) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
+	{
+
+		this.difficulte = diffe;
+		this.nbrBlocks = nbr;
 		this.liste_block = niveau1.Block.genererListeBlock(this.difficulte, this.nbrBlocks); // génère une liste de block aléatoire avec un block genesis au début
-		Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
-		long temps = timestamp2.getTime() - timestamp.getTime(); // calcule la durée en millisecondes pour générer la blockchain
 		if(!this.isValid()) // détermine la validité de la blockchain
 		{
 			System.err.println("erreur de génération blockchain...");
 		}
-		System.out.print(temps / 1000); // transforme "temps" en secondes
-		System.out.println(" secondes pour générer la blockchain");
+	}
+
+	static public boolean isBcFromJsonValid(Blockchain bc)
+	{
+		boolean test = true;
+		test = bc.isValid();
+		System.err.println("test=" + test);
+		return test;
 	}
 
 	/**
@@ -122,13 +96,12 @@ public class Blockchain
 	 */
 	public boolean isValid()
 	{
+		this.afficherBlockchain();
 		int i = 1;
 		boolean retour = true;
 		// on vérifie d'abord si le bloc genesis est bien le genesis (nonce à 0, hash précédent à 0, et 1 seule transaction)
 		Block tempo = new Block(); // initialise un block vide , qui servira de tampon pendant les vérifications, histoire de ne pas modifier accidentellement des valeurs de la blockchain
 		tempo.copyBlockFrom(this.getGenesis()); // copie le block genesis
-		System.out.println(tempo.getHash_precedent());
-		System.out.println(tempo.getHash_precedent().equals("0"));
 		if(tempo.getNonce() == 0 && tempo.getHash_precedent().equals("0") && (tempo.getTransactionTab())[0].getTransaction().equals("Genesis"))
 		{
 			retour = true;
@@ -137,47 +110,48 @@ public class Blockchain
 			System.err.println("erreur gen");
 			retour = false;
 		}
-		for (; i < this.nbrBlocks; i++) 
+		for (; i < this.nbrBlocks; i++)
 		/** pour tout les blocks on va vérifier si le hash est correct,la merkle root, et si ils sont chainés correctement **/
 		{
-			if(this.getBlock(i).getHash_precedent() != this.getBlock(i - 1).getblockHash()) // hash précédent
+			if(!this.getBlock(i).getHash_precedent().equals(this.getBlock(i - 1).getblockHash())) // hash précédent
 			{
 				// si jamais le hash précédent du block actuel est différent du hash du block précédent
+				System.err.println("erreur hash precedent");
+				System.err.println(this.getBlock(i).getHash_precedent());
+				System.err.println(this.getBlock(i - 1).getblockHash());
 				retour = false;
 			}
 			tempo.copyBlockFrom(this.getBlock(i));
-			tempo.setNonce(0); 
-			/** on aurait aussi pu mettre this.getnonce() - 1
-			 * dans tout les cas il fallait une valeur inférieure à la nonce du block 
-			 * vu que c'est le nombre d'itérations nécessaire pour obtenir un hash satisfaisant la difficulté. 
-			 * en partant avec une nonce égale à celle du block, on aurait du trouver le prochain hash satisfaisant la difficulté
+			tempo.setNonce(0);
+			/**
+			 * on aurait aussi pu mettre this.getnonce() - 1 dans tout les cas il fallait une valeur inférieure à la nonce du block vu que c'est le nombre d'itérations nécessaire pour obtenir un hash satisfaisant la difficulté. en partant avec une nonce égale à celle du block, on aurait du trouver le prochain hash satisfaisant la difficulté
 			 */
 			tempo.calculerHashBlock(this.getDifficulty());
 			if(!(tempo.getblockHash().equals(this.getBlock(i).getblockHash()))) // si le hash calculé n'est pas le mème, il ya un problème, et la blockchain n'est pas valide
 			{
 				System.err.println("ERREUR HASH BLOCK");
-				tempo.afficherBlock();
-				this.getBlock(i).afficherBlock();
-				System.out.println(tempo.getblockHash());
-				System.out.println(this.getBlock(i).getblockHash());
+				System.err.println(tempo.getblockHash());
+				System.err.println(this.getBlock(i).getblockHash());
 				retour = false;
 			}
 			tempo.calculerMerkelBlock();
 			if(!(tempo.getmerkleRoot().equals(this.getBlock(i).getmerkleRoot())))
 			{
 				System.err.println("ERREUR HASH Merkle");
-				System.out.println(tempo.getmerkleRoot());
-				System.out.println(this.getBlock(i).getmerkleRoot());
+				System.err.println(tempo.getmerkleRoot());
+				System.err.println(this.getBlock(i).getmerkleRoot());
 				retour = false;
 			}
 		}
 
 		return retour;
 	}
-	/** ------ getters and setters -----*/
+
+	/** ------ getters and setters ----- */
 	/**
 	 * renvoie le block genesis, ou null si la blockchain est vide
-	 * @return la genesis ou null si elle n'existe pas 
+	 * 
+	 * @return la genesis ou null si elle n'existe pas
 	 */
 	private Block getGenesis()
 	{
@@ -191,9 +165,12 @@ public class Blockchain
 		}
 	}
 
-	/** retourne le block i de la lste, mais en plus joli qu'un accès au tableau 
-	 * @param i : index du block demandé
-	 * @return le block d'index i 
+	/**
+	 * retourne le block i de la lste, mais en plus joli qu'un accès au tableau
+	 * 
+	 * @param i
+	 *            : index du block demandé
+	 * @return le block d'index i
 	 **/
 	public Block getBlock(int i)
 	{
@@ -206,25 +183,32 @@ public class Blockchain
 			return null; // du coup, on renvoie null si le block demandé n'existe pas
 		}
 	}
-	/** 
+
+	/**
 	 * getter nombre blocks
+	 * 
 	 * @return le nombre de blocks de la blockchain
 	 */
 	public int getNbrBlocks()
 	{
 		return this.nbrBlocks;
 	}
+
 	/**
 	 * getter difficulté
+	 * 
 	 * @return la difficulté de la blockchain
 	 */
 	public int getDifficulty()
 	{
 		return this.difficulte;
 	}
+
 	/**
-	 * affiche un block de la blockchain, ici aussi en plus joli 
-	 * @param nbrBlock : index du block à afficher
+	 * affiche un block de la blockchain, ici aussi en plus joli
+	 * 
+	 * @param nbrBlock
+	 *            : index du block à afficher
 	 */
 	public void afficherBlockBlockchain(int nbrBlock)
 	{

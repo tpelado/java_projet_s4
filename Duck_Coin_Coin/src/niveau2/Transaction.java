@@ -1,17 +1,17 @@
 package niveau2;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom; // Utilisé pour générer des nombres pseudos aléatoires 
+
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.ECKey;
-
-import com.google.protobuf.Message;
 
 
 public class Transaction
 {
 	private int index;
-	private Timestamp timestamp;
+	private String timestamp;
 	private String emetteur; 
 	private String destinataire;
 	private int montant;
@@ -28,7 +28,9 @@ public class Transaction
 	public Transaction(int index, String emetteur, String destinataire, int montant, String signature)
 	{
 		this.index = index;
-		this.timestamp = new Timestamp(System.currentTimeMillis());
+		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a");
+		Timestamp test = new Timestamp(System.currentTimeMillis());
+		this.timestamp = sdf.format(test);
 		this.emetteur = emetteur;
 		this.destinataire = destinataire;
 		this.montant = montant;
@@ -158,7 +160,7 @@ public class Transaction
 	/**
 	 * @param timestamp the timestamp to set
 	 */
-	private void setTimestamp(Timestamp timestamp)
+	private void setTimestamp(String timestamp)
 	{
 		this.timestamp = timestamp;
 	}

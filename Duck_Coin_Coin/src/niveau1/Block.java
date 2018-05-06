@@ -1,7 +1,6 @@
 package niveau1;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom; // Utilisé pour générer des nombres pseudos aléatoires 
 
@@ -183,6 +182,8 @@ public class Block
 		this.calculerMerkelBlock();
 	}
 
+	
+	
 	static public Block[] genererListeBlock(int difficulte, int nbrBlocks)
 	{
 		int i;
@@ -194,6 +195,7 @@ public class Block
 			listBlock[i] = new Block(i);
 			listBlock[i].setHash_precedent(listBlock[i - 1].getblockHash()); // chaine les blocks
 			listBlock[i].calculerHashBlock(difficulte);// calcule le hash du block
+			
 		}
 		return listBlock;
 	}
