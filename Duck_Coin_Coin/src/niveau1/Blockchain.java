@@ -129,7 +129,10 @@ public class Blockchain
 		tempo.copyBlockFrom(this.getGenesis()); // copie le block genesis
 		if(tempo.getNonce() == 0 && tempo.getHash_precedent() == "0" && (tempo.getTransactionTab())[0].getTransaction() == "Genesis")
 		{
-			retour = true;
+			if((tempo.getblockHash().equals(this.getGenesis().getblockHash()))&&(tempo.getmerkleRoot().equals(this.getGenesis().getmerkleRoot())))
+				retour = true;
+			else
+				retour = false;
 		} else
 		{
 			retour = false;
