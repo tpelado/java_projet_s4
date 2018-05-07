@@ -72,10 +72,10 @@ public class Blockchain
 	 *            le nombre de blocks à generer
 	 * @return une blockchain correspondant au réglages ci dessus
 	 */
-	public static Blockchain genererDepuisDehors(int diff, int nbr)
+	public static Blockchain genererDepuisDehors(int diff, int nbr, int nbrTransBlk)
 	{
 		Blockchain bc = new Blockchain();
-		bc.genererBlockchain(diff, nbr);
+		bc.genererBlockchain(diff, nbr, nbrTransBlk);
 		return bc;
 	}
 
@@ -87,13 +87,13 @@ public class Blockchain
 	 * @param nbr
 	 *            le nombre de blocks
 	 */
-	public void genererBlockchain(int diffe, int nbr) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
+	public void genererBlockchain(int diffe, int nbr, int nbrTransBlk) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
 	{
 
 		this.difficulte = diffe;
 		this.nbrBlocks = nbr;
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis()); // on s'en sert pour savoir combien de temps on met pour générer la blockchain
-		this.liste_block = niveau2.Block.genererListeBlock(this.difficulte, this.nbrBlocks); // génère une liste de block aléatoire avec un block genesis au début
+		this.liste_block = niveau2.Block.genererListeBlock(this.difficulte, this.nbrBlocks, nbrTransBlk); // génère une liste de block aléatoire avec un block genesis au début
 		Timestamp timestamp2 = new Timestamp(System.currentTimeMillis());
 		long temps = timestamp2.getTime() - timestamp.getTime(); // calcule la durée en millisecondes pour générer la blockchain
 		if(!this.isValid()) // détermine la validité de la blockchain

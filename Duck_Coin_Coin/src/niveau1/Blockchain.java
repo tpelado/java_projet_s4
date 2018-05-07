@@ -69,10 +69,10 @@ public class Blockchain
 	 * @param nbr le nombre de blocks à generer
 	 * @return une blockchain correspondant au réglages ci dessus
 	 */
-	public static Blockchain genererDepuisDehors(int diff, int nbr)
+	public static Blockchain genererDepuisDehors(int diff, int nbr, int nbrtrans)
 	{
 		Blockchain bc = new Blockchain();
-		bc.genererBlockchain(diff, nbr);
+		bc.genererBlockchain(diff, nbr,nbrtrans);
 		return bc;
 	}
 	/**
@@ -80,12 +80,12 @@ public class Blockchain
 	 * @param diffe la difficulté de la blockchain
 	 * @param nbr le nombre de blocks
 	 */
-	public void genererBlockchain(int diffe, int nbr) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
+	public void genererBlockchain(int diffe, int nbr,int nbrtrans) // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
 	{
 
 		this.difficulte = diffe;
 		this.nbrBlocks = nbr;
-		this.liste_block = niveau1.Block.genererListeBlock(this.difficulte, this.nbrBlocks); // génère une liste de block aléatoire avec un block genesis au début
+		this.liste_block = niveau1.Block.genererListeBlock(this.difficulte, this.nbrBlocks, nbrtrans); // génère une liste de block aléatoire avec un block genesis au début
 		if(!this.isValid()) // détermine la validité de la blockchain, ne "devrait" jamais se déclencher
 		{
 			System.err.println("erreur de génération blockchain...");

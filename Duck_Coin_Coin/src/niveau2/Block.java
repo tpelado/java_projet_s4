@@ -25,7 +25,7 @@ public class Block
 	 * @param index
 	 *            valeur de l'index pour le block à construire
 	 */
-	public Block(int index)
+	public Block(int index, int nbrTransBlk)
 	{
 		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a");
 		Timestamp test = new Timestamp(System.currentTimeMillis());
@@ -42,7 +42,7 @@ public class Block
 			this.liste_transaction = tab_trans;
 		} else
 		{
-			this.nbr_transaction = ThreadLocalRandom.current().nextInt(1, 10 + 1);
+			this.nbr_transaction = ThreadLocalRandom.current().nextInt(1,nbrTransBlk  + 1);
 			this.liste_transaction = niveau2.Transaction.genererListeTransaction(this.nbr_transaction);
 
 		}
@@ -185,17 +185,18 @@ public class Block
 	 * génère une liste de block pour la blockchain
 	 * @param difficulte la difficulté de minage
 	 * @param nbrBlocks le nombre de blocks a generer
+	 * @param nbrTransBlk 
 	 * @return une liste de blocks 
 	 */
-	static public Block[] genererListeBlock(int difficulte, int nbrBlocks)
+	static public Block[] genererListeBlock(int difficulte, int nbrBlocks, int nbrTransBlk)
 	{
 		int i;
 		Block[] listBlock = new Block[nbrBlocks];
-		listBlock[0] = new Block(0); // ajoute le block genesis
+		listBlock[0] = new Block(0,0); // ajoute le block genesis
 		listBlock[0].calculerHashBlock(0); // calcule le hash avec une difficulté de 0 (pour ne pas toucher à la nonce)
 		for (i = 1; i < nbrBlocks; i++)
 		{
-			listBlock[i] = new Block(i);
+			listBlock[i] = new Block(i,nbrTransBlk);
 			listBlock[i].setHash_precedent(listBlock[i - 1].getblockHash()); // chaine les blocks
 			listBlock[i].calculerHashBlock(difficulte);// calcule le hash du block
 		}
