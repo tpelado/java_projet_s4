@@ -62,7 +62,7 @@ public class Blockchain
 	 */
 	public boolean isEmpty()
 	{
-		return this.nbrBlocks == -1;
+		return this.nbrBlocks < 1;
 	}
 
 	public void genererBlockchain() // demande à l'utulisateur les attributs de la blockchain qu'il veut générer
@@ -127,7 +127,9 @@ public class Blockchain
 		// on vérifie d'abord si le bloc genesis est bien le genesis (nonce à 0, hash précédent à 0, et 1 seule transaction)
 		Block tempo = new Block(); // initialise un block vide , qui servira de tampon pendant les vérifications, histoire de ne pas modifier accidentellement des valeurs de la blockchain
 		tempo.copyBlockFrom(this.getGenesis()); // copie le block genesis
-		if(tempo.getNonce() == 0 && tempo.getHash_precedent() == "0" && (tempo.getTransactionTab())[0].getTransaction() == "Genesis")
+		System.out.println(tempo.getHash_precedent());
+		System.out.println(tempo.getHash_precedent().equals("0"));
+		if(tempo.getNonce() == 0 && tempo.getHash_precedent().equals("0") && (tempo.getTransactionTab())[0].getTransaction().equals("Genesis"))
 		{
 			if((tempo.getblockHash().equals(this.getGenesis().getblockHash()))&&(tempo.getmerkleRoot().equals(this.getGenesis().getmerkleRoot())))
 				retour = true;
@@ -135,6 +137,7 @@ public class Blockchain
 				retour = false;
 		} else
 		{
+			System.err.println("erreur gen");
 			retour = false;
 		}
 		for (; i < this.nbrBlocks; i++) 

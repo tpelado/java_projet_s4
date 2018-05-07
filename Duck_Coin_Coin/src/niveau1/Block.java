@@ -1,13 +1,15 @@
 package niveau1;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.ThreadLocalRandom; // Utilisé pour générer des nombres pseudos aléatoires 
 
 public class Block
 {
 
 	private int index;
-	private Timestamp timestamp;
+	private String timestamp;
 	private String hash_precedent;
 	private int nbr_transaction;
 	private String merkleRoot;
@@ -23,8 +25,9 @@ public class Block
 	 */
 	public Block(int index)
 	{
-		this.timestamp = new Timestamp(System.currentTimeMillis());
-		// this.timestamp.toGMTString();
+		final SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss a");
+		Timestamp test = new Timestamp(System.currentTimeMillis());
+		this.timestamp = sdf.format(test);
 		this.nonce = 0;
 		this.index = index;
 		if(index == 0) // si c'est le block genesis
@@ -139,15 +142,16 @@ public class Block
 	public void calculerHashBlock(int difficulte)
 	{
 		String tempo;
+		
 		if(difficulte < 1)
 		{
-			tempo = niveau1.HashUtil.applySha256(this.hash_precedent + this.getStringTimestamp() + this.merkleRoot + this.nonce);
+			tempo = niveau1.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
 			this.blockHash = tempo;
 		} else
 		{
 			do
 			{
-				tempo = niveau1.HashUtil.applySha256(this.hash_precedent + this.getStringTimestamp() + this.merkleRoot + this.nonce);
+				tempo = niveau1.HashUtil.applySha256(this.hash_precedent + this.timestamp + this.merkleRoot + this.nonce);
 				// System.out.println("hash obtenu "+tempo+" avec nonce "+this.nonce);
 				// System.out.println("prec : "+this.getHash_precedent()+"\nstamp
 				// "+this.getStringTimestamp()+"\nmerkel "+this.merkleRoot);
@@ -218,7 +222,7 @@ public class Block
 	 * @param timestamp
 	 *            the timestamp to set
 	 */
-	public void setTimestamp(Timestamp timestamp)
+	public void setTimestamp(String timestamp)
 	{
 		this.timestamp = timestamp;
 	}

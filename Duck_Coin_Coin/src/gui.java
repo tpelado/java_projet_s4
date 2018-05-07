@@ -64,32 +64,30 @@ public class gui
 	private void initialize()
 	{
 		frame = new JFrame();
-		frame.setResizable(false);
 		frame.getContentPane().setBackground(Color.LIGHT_GRAY);
-		frame.setBounds(100, 100, 826, 634);
+		frame.setBounds(100, 100, 793, 624);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JPanel panel = new JPanel();
-		panel.setBackground(Color.LIGHT_GRAY);
-		panel.setMaximumSize(new Dimension(200, 100));
-		frame.getContentPane().add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new GridLayout(0, 1, 0, 0));
-		JLabel david = new JLabel("Sponsoris\u00E9 par ");
-		david.setHorizontalTextPosition(SwingConstants.LEFT);
-		david.setHorizontalAlignment(SwingConstants.RIGHT);
-		david.setVerticalAlignment(SwingConstants.BOTTOM);
-		david.setIcon(new ImageIcon(gui.class.getResource("/ressources/david.jpg")));
-		//david.setIcon(null);
-		panel.add(david);
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[]{150, 0};
+		gridBagLayout.rowHeights = new int[]{103, 34, 297, 136, 0};
+		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		frame.getContentPane().setLayout(gridBagLayout);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(Color.LIGHT_GRAY);
-		frame.getContentPane().add(panel_1, BorderLayout.NORTH);
+		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panel_1.anchor = GridBagConstraints.NORTH;
+		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_1.gridx = 0;
+		gbc_panel_1.gridy = 0;
+		frame.getContentPane().add(panel_1, gbc_panel_1);
 		panel_1.setLayout(new FormLayout(new ColumnSpec[] {
 				ColumnSpec.decode("815px"),
 				ColumnSpec.decode("410px"),},
 			new RowSpec[] {
-				RowSpec.decode("216px"),}));
+				RowSpec.decode("108px"),}));
 		
 		JLabel lblLogo = new JLabel("DuckCoinCoin Blockchain Generator");
 		lblLogo.setHorizontalTextPosition(SwingConstants.RIGHT);
@@ -100,7 +98,12 @@ public class gui
 		panel_1.add(lblLogo, "1, 1, default, top");
 		
 		JPanel panel_2 = new JPanel();
-		frame.getContentPane().add(panel_2, BorderLayout.CENTER);
+		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
+		gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panel_2.insets = new Insets(0, 0, 5, 0);
+		gbc_panel_2.gridx = 0;
+		gbc_panel_2.gridy = 1;
+		frame.getContentPane().add(panel_2, gbc_panel_2);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_3 = new JPanel();
@@ -119,5 +122,23 @@ public class gui
 		rdbtnNiveau_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		panel_3.add(rdbtnNiveau_1);
 		rdbtnNiveau_1.setHorizontalAlignment(SwingConstants.RIGHT);
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(Color.LIGHT_GRAY);
+		panel.setMaximumSize(new Dimension(200, 100));
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
+		gbc_panel.anchor = GridBagConstraints.SOUTH;
+		gbc_panel.gridx = 0;
+		gbc_panel.gridy = 3;
+		frame.getContentPane().add(panel, gbc_panel);
+		panel.setLayout(new GridLayout(0, 1, 0, 0));
+		JLabel david = new JLabel("Sponsoris\u00E9 par ");
+		david.setHorizontalTextPosition(SwingConstants.LEFT);
+		david.setHorizontalAlignment(SwingConstants.RIGHT);
+		david.setVerticalAlignment(SwingConstants.BOTTOM);
+		david.setIcon(new ImageIcon(gui.class.getResource("/ressources/david.jpg")));
+		//david.setIcon(null);
+		panel.add(david);
 	}
 }
